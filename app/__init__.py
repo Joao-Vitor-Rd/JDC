@@ -1,7 +1,9 @@
-from .app import MeuAppCLI
+from .app import JDC
+from .util import dir
 
 def start():
-    app = MeuAppCLI()
+    dir.Dir.create_data_dir()
+    app = JDC()
     app.run()
 
 if __name__ == "__main__":
