@@ -1,4 +1,4 @@
-# JDC - Jovi 2026
+# JDC - Judge Code
 
 Uma aplicação Terminal User Interface (TUI) desenvolvida com Textual para navegação interativa de questões de programação.
 
