@@ -1,22 +1,22 @@
-from textual.containers import Container, Horizontal, Vertical
-from textual.widgets import Button, Static, OptionList, Header
+from textual.widgets import ListItem, ListView, Label
 from textual.app import ComposeResult
 from .base_screen import BaseScreen
-from .first_section import FirstSection
+from .sections_screen import SectionsScreen
 
 class MainScreen(BaseScreen):
     
     is_root = True
-    
+    CSS_PATH = "../css/main_screen.css"
+
     def compose(self) -> ComposeResult:
         yield from super().compose()
-        yield Vertical(
-            Button("Modules", id="modules", variant="primary"),
-            Button("Configs", id="configs", variant="primary"),
-            id="buttons_container",
+        yield ListView(
+            ListItem(Label("Sections"), id="sections"),
+            ListItem(Label("Configurations"), id="configs"),
         )
     
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "modules":
-            self.app.push_screen(FirstSection())
+    def on_list_view_selected(self, event: ListView.Selected) -> None:
+        item_id = event.item.id
+        if item_id == "sections":
+            self.app.push_screen(SectionsScreen())
 

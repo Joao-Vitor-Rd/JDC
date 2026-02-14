@@ -1,5 +1,5 @@
 from textual.containers import Container
-from textual.widgets import Button, Static, OptionList
+from textual.widgets import Static, OptionList
 from textual.widgets.option_list import Option
 from textual.app import ComposeResult
 from .base_screen import BaseScreen
@@ -13,8 +13,7 @@ QUESTOES = {
     "op3": {"titulo": "Sliding Window", "conteúdo": "Explicação da questão 03..."},
 }
 
-class FirstSection(BaseScreen):
-    """Tela da primeira seção da aplicação."""
+class ProblemsSections(BaseScreen):
 
     def compose(self) -> ComposeResult:
         yield from super().compose()

@@ -1,30 +1,22 @@
-from textual.containers import Container, Horizontal, Vertical
-from textual.widgets import Button, Static, OptionList, Header
-from textual.widgets.option_list import Option
-from textual.widget import Widget
-from textual.screen import Screen
-from typing import TYPE_CHECKING
-from ..widget.footer_app import FooterApp
+from textual.containers import Horizontal, Vertical
+from textual.widgets import Button, Static
 from textual.app import ComposeResult
 import subprocess
+from .base_screen import BaseScreen
 from pathlib import Path
-
-if TYPE_CHECKING:
-    from .base_screen import BaseScreen
 
 QUESTION = "Prefix Sum"
 
-class QuestionScreen(Screen):
+class QuestionScreen(BaseScreen):
 
     CSS_PATH = "../css/question_screen.css"
-    BINDINGS = [("q", "quit_app", "Sair")]
 
-    def __init__(self, questao_data):
+    def __init__(self, questao_data=None):
         super().__init__()
-        self.questao_data = questao_data
+        self.questao_data = questao_data or {}
     
     def compose(self) -> ComposeResult:
-        yield Header()
+        yield from super().compose()
         yield Vertical(
             Static(self.questao_data.get("titulo", "Questão"), classes="titulo"),
             Static(self.questao_data.get("conteúdo", "")),
@@ -34,7 +26,6 @@ class QuestionScreen(Screen):
                 id="buttons_container",
             ),
         )
-        yield FooterApp()
     
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn_voltar":
@@ -44,8 +35,6 @@ class QuestionScreen(Screen):
             (folder / "q1.c").touch()
             subprocess.Popen(f'code "{folder}/q1.c"', shell=True)
     
-    def action_quit_app(self) -> None:
-        self.app.pop_screen()
 
 
     
