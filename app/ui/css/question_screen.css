@@ -2,3 +2,12 @@ Horizontal#buttons_container {
     align: center bottom;
     width: 100%;
 }
+Static#status_display {
+    border: solid $primary;
+    padding: 1 2;
+    margin: 1;
+    align: center middle;
+    text-align: center;
+    background: $surface;
+    color: $text;
+}

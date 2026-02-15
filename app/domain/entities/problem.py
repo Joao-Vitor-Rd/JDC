@@ -3,6 +3,8 @@ class Problem:
     STATUS_UNSOLVED = "US"
     STATUS_ACCEPTED = "AC"
     STATUS_WRONG_ANSWER = "WA"
+    STATUS_TIME_LIMIT_EXCEED = "TL"
+    STATUS_COMPILER_ERROR = "CE"
 
     def __init__(
         self,
@@ -34,16 +36,19 @@ class Problem:
         return correct_outputs
     
     def evaluete_submission(self, code_outputs: list) -> str:
-        if self._submission_result != self.STATUS_UNSOLVED:
-            submission_correct_outputs = self.compare_outputs(code_outputs)
+        submission_correct_outputs = self.compare_outputs(code_outputs)
+
+        if code_outputs[0] == "@TL@" or code_outputs[0] == "@CE@":
+             self._submission_result = code_outputs[0]
+        else:
+        
             if submission_correct_outputs == len(self._expected_outputs):
                 self._submission_result = self.STATUS_ACCEPTED
             else:
                 self._submission_result = self.STATUS_WRONG_ANSWER
 
-            self._total_of_correct_outputs = submission_correct_outputs
+        self._total_of_correct_outputs = submission_correct_outputs
 
-        return self._submission_result
 
     
     @property
