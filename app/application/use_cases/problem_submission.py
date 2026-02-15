@@ -1,6 +1,5 @@
-from ...domain.repositories.code_executor import CodeExecutor
 from ...infrastructure.service.python_code_executor import PythonCodeExecutor
-from ...domain.entities.problem import Problem 
+from ...domain.evaluation.entities import Problem 
 
 class ProblemSubmissionUseCase:
     @staticmethod

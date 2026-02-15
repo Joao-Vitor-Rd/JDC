@@ -5,7 +5,7 @@ import subprocess
 from .base_screen import BaseScreen
 from pathlib import Path
 from ...application.use_cases.problem_submission import ProblemSubmissionUseCase
-from ...domain.entities.problem import Problem
+from ...domain.evaluation.entities import Problem
 from threading import Thread
 
 QUESTION = "Prefix Sum"

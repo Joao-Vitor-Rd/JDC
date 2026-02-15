@@ -1,4 +1,4 @@
-from ...domain.repositories.code_executor import CodeExecutor
+from ...domain.evaluation.interfaces import CodeExecutor
 import subprocess
 import sys
 
