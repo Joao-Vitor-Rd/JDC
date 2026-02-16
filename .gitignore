@@ -43,3 +43,6 @@ htmlcov/
 # Environment
 .env
 .env.local
+
+test_db
+test_db.sql

@@ -2,6 +2,7 @@ from textual.app import ComposeResult
 from .base_screen import BaseScreen
 from .problem_sections import ProblemsSections
 from textual.widgets import Label, ListItem, ListView
+from ...application.use_cases import ShowSectionsUseCase
 
 class SectionsScreen(BaseScreen):
 
@@ -9,11 +10,15 @@ class SectionsScreen(BaseScreen):
 
     def compose(self) -> ComposeResult:
         yield from super().compose()
-        yield ListView(
-            ListItem(Label("One"), id="q1"),
-            ListItem(Label("Two"), id="q2"),
-            ListItem(Label("Three"), id="q3"),
-        )
+        
+        sections = ShowSectionsUseCase.execute()
+        
+        list_items = [
+            ListItem(Label(section.title), id=f"section_{section.id}")
+            for section in sections
+        ]
+        
+        yield ListView(*list_items)
 
     def on_list_view_selected(self, event: ListView.Selected) -> None:
         self.app.push_screen(ProblemsSections())
