@@ -28,6 +28,7 @@ class PythonCodeExecutor(CodeExecutor):
                 
             except subprocess.TimeoutExpired:
                 code_outputs.append(TLE_FLAG)
+                break
                 
             except Exception as e:
                 code_outputs.append(COMPILER_ERROR_FLAG)

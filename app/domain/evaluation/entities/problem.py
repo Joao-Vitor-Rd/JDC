@@ -38,10 +38,11 @@ class Problem:
     def evaluete_submission(self, code_outputs: list) -> str:
         submission_correct_outputs = self.compare_outputs(code_outputs)
 
-        if code_outputs[0] == "@TL@" or code_outputs[0] == "@CE@":
-             self._submission_result = code_outputs[0]
+        if code_outputs[0] == "@TL@":
+            self._submission_result = self.STATUS_TIME_LIMIT_EXCEED
+        elif code_outputs[0] == "@CE@":
+            self._submission_result = self.STATUS_COMPILER_ERROR
         else:
-        
             if submission_correct_outputs == len(self._expected_outputs):
                 self._submission_result = self.STATUS_ACCEPTED
             else:
