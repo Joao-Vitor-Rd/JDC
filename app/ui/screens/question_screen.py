@@ -4,7 +4,7 @@ from textual.app import ComposeResult
 import subprocess
 from .base_screen import BaseScreen
 from pathlib import Path
-from ...application.use_cases.problem_submission import ProblemSubmissionUseCase
+from ...presentation.controllers.evaluation.problem_controller import ProblemController 
 from ...domain.evaluation.entities import Problem
 from threading import Thread
 
@@ -17,6 +17,7 @@ class QuestionScreen(BaseScreen):
     def __init__(self, questao_data=None):
         super().__init__()
         self.questao_data = questao_data or {}
+        self.controller = ProblemController()
 
         self.problem = Problem(
             id=1,
@@ -43,8 +44,6 @@ class QuestionScreen(BaseScreen):
         
         return f"Status: {status_text}\nAcertos: {correct}/{total}"
     
-    def _execute_submission(self, code_path: str) -> None:
-        ProblemSubmissionUseCase.execute(code_path=code_path, problem=self.problem)
     
     def _on_submission_complete(self) -> None:
         status_widget = self.query_one("#status_display", Static)
@@ -52,7 +51,7 @@ class QuestionScreen(BaseScreen):
     
     def _execute_and_update(self, code_path: str) -> None:
         try:
-            ProblemSubmissionUseCase.execute(code_path=code_path, problem=self.problem)
+            self.controller.evaluate_code(code_path=code_path, problem=self.problem)
         except Exception as e:
             self.app.call_from_thread(lambda: self._show_error_message(f"Erro: {str(e)}"))
         finally:

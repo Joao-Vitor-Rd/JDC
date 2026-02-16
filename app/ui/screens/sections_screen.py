@@ -2,7 +2,7 @@ from textual.app import ComposeResult
 from .base_screen import BaseScreen
 from .problem_sections import ProblemsSections
 from textual.widgets import Label, ListItem, ListView
-from ...application.use_cases import ShowSectionsUseCase
+from ...presentation.controllers.evaluation.section_controller import SectionController
 
 class SectionsScreen(BaseScreen):
 
@@ -11,7 +11,8 @@ class SectionsScreen(BaseScreen):
     def compose(self) -> ComposeResult:
         yield from super().compose()
         
-        sections = ShowSectionsUseCase.execute()
+        controller = SectionController()
+        sections = controller.show_all_sections()
         
         list_items = [
             ListItem(Label(section.title), id=f"section_{section.id}")
