@@ -1,12 +1,11 @@
 from textual.containers import Horizontal, Vertical
 from textual.widgets import Button, Static
 from textual.app import ComposeResult
-import subprocess
 from .base_screen import BaseScreen
 from pathlib import Path
 from ...presentation.controllers.evaluation import ProblemController 
 from ...domain.evaluation.entities import Problem
-from threading import Thread
+from ...util.dir import Dir
 
 QUESTION = "Prefix Sum"
 
@@ -28,46 +27,7 @@ class QuestionScreen(BaseScreen):
             submission_result=Problem.STATUS_UNSOLVED,
             total_of_correct_outputs=0
         )
-    
-    def _get_status_display(self) -> str:
-        status_map = {
-            Problem.STATUS_UNSOLVED: "US",
-            Problem.STATUS_ACCEPTED: "AC",
-            Problem.STATUS_WRONG_ANSWER: "WA",
-            Problem.STATUS_TIME_LIMIT_EXCEED: "TL",
-            Problem.STATUS_COMPILER_ERROR: "CE"
-        }
         
-        status_text = status_map.get(self.problem.submission_result, "?")
-        correct = self.problem._total_of_correct_outputs
-        total = len(self.problem._expected_outputs)
-        
-        return f"Status: {status_text}\nAcertos: {correct}/{total}"
-    
-    
-    def _on_submission_complete(self) -> None:
-        status_widget = self.query_one("#status_display", Static)
-        status_widget.update(self._get_status_display())
-    
-    def _execute_and_update(self, code_path: str) -> None:
-        try:
-            self.controller.evaluate_code(code_path=code_path, problem=self.problem)
-        except Exception as e:
-            self.app.call_from_thread(lambda: self._show_error_message(f"Erro: {str(e)}"))
-        finally:
-            self.app.call_from_thread(self._update_after_submission)
-    
-    def _show_error_message(self, message: str) -> None:
-        status_widget = self.query_one("#status_display", Static)
-        status_widget.update(f"ERRO\n{message}")
-    
-    def _update_after_submission(self) -> None:
-        status_widget = self.query_one("#status_display", Static)
-        status_widget.update(self._get_status_display())
-        
-        submit_btn = self.query_one("#submit", Button)
-        submit_btn.disabled = False
-    
     def compose(self) -> ComposeResult:
         yield from super().compose()
         yield Vertical(
@@ -82,26 +42,44 @@ class QuestionScreen(BaseScreen):
             ),
         )
     
+    def _get_status_display(self) -> str:
+        status_text = self.problem.submission_result
+        correct = self.problem._total_of_correct_outputs
+        total = len(self.problem._expected_outputs)
+        
+        return f"Status: {status_text}\nAcertos: {correct}/{total}"
+    
+    async def _execute_in_worker(self, code_path: str) -> None:
+        try:
+            self._while_evaluate()
+            self.controller.evaluate_code(code_path=code_path, problem=self.problem)
+            self._update_after_submission()
+        except Exception as e:
+            self._show_error_message(f"Erro: {str(e)}")
+    
+    def _show_error_message(self, message: str) -> None:
+        status_widget = self.query_one("#status_display", Static)
+        status_widget.update(f"ERRO\n{message}")
+    
+    def _update_after_submission(self) -> None:
+        status_widget = self.query_one("#status_display", Static)
+        status_widget.update(self._get_status_display())
+        
+        submit_btn = self.query_one("#submit", Button)
+        submit_btn.disabled = False
+
+    def _while_evaluate(self):
+        status_widget = self.query_one("#status_display", Static)
+        status_widget.update("Executando...")
+            
+        submit_btn = self.query_one("#submit", Button)
+        submit_btn.disabled = True
+    
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn_voltar":
             self.app.pop_screen()
         if event.button.id == "code":
-            folder = Path.home() / "jdc_data"
-            (folder / "q1.py").touch()
-            subprocess.Popen(f'code "{folder}/q1.py"', shell=True)
+            Dir.open_vscode_in_code("q1.py")
         if event.button.id == "submit":
-            path = Path.home() / "jdc_data" / "q1.py"
-            
-            status_widget = self.query_one("#status_display", Static)
-            status_widget.update("Executando...")
-            
-            submit_btn = self.query_one("#submit", Button)
-            submit_btn.disabled = True
-            
-            thread = Thread(target=self._execute_and_update, args=(path,), daemon=True)
-            thread.start()
-        
-    
-
-
+            self.run_worker(self._execute_in_worker(Dir.concat_JDC_path("q1.py"))) 
     
