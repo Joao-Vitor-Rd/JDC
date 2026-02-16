@@ -2,7 +2,7 @@ from textual.app import ComposeResult
 from .base_screen import BaseScreen
 from .problem_sections import ProblemsSections
 from textual.widgets import Label, ListItem, ListView
-from ...presentation.controllers.evaluation.section_controller import SectionController
+from ...presentation.controllers.evaluation import SectionController
 
 class SectionsScreen(BaseScreen):
 

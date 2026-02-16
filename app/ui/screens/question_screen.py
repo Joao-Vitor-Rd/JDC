@@ -4,7 +4,7 @@ from textual.app import ComposeResult
 import subprocess
 from .base_screen import BaseScreen
 from pathlib import Path
-from ...presentation.controllers.evaluation.problem_controller import ProblemController 
+from ...presentation.controllers.evaluation import ProblemController 
 from ...domain.evaluation.entities import Problem
 from threading import Thread
 

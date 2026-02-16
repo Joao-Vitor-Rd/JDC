@@ -1,3 +1,0 @@
-from .section_controller import SectionController
-
-__all__ = ['SectionController']
