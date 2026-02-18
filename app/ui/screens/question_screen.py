@@ -6,6 +6,7 @@ from pathlib import Path
 from ...presentation.controllers.evaluation import ProblemController 
 from ...domain.evaluation.entities import Problem
 from ...util.dir import Dir
+import asyncio
 
 QUESTION = "Prefix Sum"
 
@@ -17,10 +18,12 @@ class QuestionScreen(BaseScreen):
         super().__init__()
         self.questao_data = questao_data or {}
         self.controller = ProblemController()
+        self.animation_frame = 0
+        self.animation_handle = None
 
         self.problem = Problem(
             id=1,
-            title="Contar de 1 até N",
+            title="q1.py",
             description="Dado um número n, imprima de 1 até n, cada número em uma linha",
             inputs=[5, 10, 1],
             expected_outputs=["1\n2\n3\n4\n5", "1\n2\n3\n4\n5\n6\n7\n8\n9\n10", "1"],
@@ -49,12 +52,14 @@ class QuestionScreen(BaseScreen):
         
         return f"Status: {status_text}\nAcertos: {correct}/{total}"
     
-    async def _execute_in_worker(self, code_path: str) -> None:
+    async def _execute_in_worker(self) -> None:
         try:
-            self._while_evaluate()
-            self.controller.evaluate_code(code_path=code_path, problem=self.problem)
+            self._start_animation()
+            await asyncio.to_thread(self.controller.evaluate_code, self.problem)
+            self._stop_animation()
             self._update_after_submission()
         except Exception as e:
+            self._stop_animation()
             self._show_error_message(f"Erro: {str(e)}")
     
     def _show_error_message(self, message: str) -> None:
@@ -68,18 +73,33 @@ class QuestionScreen(BaseScreen):
         submit_btn = self.query_one("#submit", Button)
         submit_btn.disabled = False
 
-    def _while_evaluate(self):
-        status_widget = self.query_one("#status_display", Static)
-        status_widget.update("Executando...")
-            
-        submit_btn = self.query_one("#submit", Button)
-        submit_btn.disabled = True
+    
+    def _start_animation(self) -> None:
+        self.animation_frame = 0
+        frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
+        
+        def update_animation():
+            try:
+                status_widget = self.query_one("#status_display", Static)
+                frame = frames[self.animation_frame % len(frames)]
+                status_widget.update(f"Executando {frame}")
+                self.animation_frame += 1
+            except:
+                pass
+        
+        self.animation_handle = self.set_interval(0.1, update_animation)
+    
+    def _stop_animation(self) -> None:
+        """Para a animação de loading"""
+        if self.animation_handle:
+            self.animation_handle.stop()
+            self.animation_handle = None
     
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn_voltar":
             self.app.pop_screen()
         if event.button.id == "code":
-            Dir.open_vscode_in_code("q1.py")
+            self.controller.edit_code(self.problem.title)
         if event.button.id == "submit":
-            self.run_worker(self._execute_in_worker(Dir.concat_JDC_path("q1.py"))) 
+            self.run_worker(self._execute_in_worker()) 
     
