@@ -26,32 +26,31 @@ class Problem:
 
         self._submission_result = submission_result
         self._total_of_correct_outputs = total_of_correct_outputs
-        
-    def compare_outputs(self, code_outputs: list) -> int:
+
+            
+    def evaluate_submission(self, code_outputs: list):
         correct_outputs = 0
+        submission_result = self.STATUS_WRONG_ANSWER
 
-        for it_code_outputs, it_expected_outputs in zip(code_outputs, self._expected_outputs):
-            if it_code_outputs == it_expected_outputs:
+        for output, expected in zip(code_outputs, self._expected_outputs):
+            if output == expected:
                 correct_outputs += 1
-        return correct_outputs
-    
-    def evaluete_submission(self, code_outputs: list) -> str:
-        submission_correct_outputs = self.compare_outputs(code_outputs)
+            elif output == "@TL@": 
+                submission_result = self.STATUS_TIME_LIMIT_EXCEED
+                break
+            elif output == "@CE@":
+                submission_result = self.STATUS_COMPILER_ERROR
+                break
+        
+        if correct_outputs == len(self._expected_outputs):
+            submission_result = self.STATUS_ACCEPTED
+        
+        self._update_result(correct_outputs,submission_result)
+        
+    def _update_result(self, correct_outputs: int, submission_result: str):
+        self.total_of_correct_outputs = correct_outputs
+        self.submission_result = submission_result
 
-        if code_outputs[0] == "@TL@":
-            self._submission_result = self.STATUS_TIME_LIMIT_EXCEED
-        elif code_outputs[0] == "@CE@":
-            self._submission_result = self.STATUS_COMPILER_ERROR
-        else:
-            if submission_correct_outputs == len(self._expected_outputs):
-                self._submission_result = self.STATUS_ACCEPTED
-            else:
-                self._submission_result = self.STATUS_WRONG_ANSWER
-
-        self._total_of_correct_outputs = submission_correct_outputs
-
-
-    
     @property
     def id(self) -> int:
         return self._id
