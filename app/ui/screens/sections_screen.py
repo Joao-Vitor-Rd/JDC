@@ -1,6 +1,6 @@
 from textual.app import ComposeResult
 from .base_screen import BaseScreen
-from .problem_sections import ProblemsSections
+from .section_problems_screen import ProblemsSections
 from textual.widgets import Label, ListItem, ListView
 from ...presentation.controllers.evaluation import SectionController
 
@@ -13,6 +13,8 @@ class SectionsScreen(BaseScreen):
         
         controller = SectionController()
         sections = controller.show_all_sections()
+
+        self.section_titles = {section.id: section.title for section in sections}
         
         list_items = [
             ListItem(Label(section.title), id=f"section_{section.id}")
@@ -22,6 +24,8 @@ class SectionsScreen(BaseScreen):
         yield ListView(*list_items)
 
     def on_list_view_selected(self, event: ListView.Selected) -> None:
-        self.app.push_screen(ProblemsSections())
+
+        section_id = int(event.item.id.split("_")[1])
+        self.app.push_screen(ProblemsSections(section_id, self.section_titles[section_id]))
 
     

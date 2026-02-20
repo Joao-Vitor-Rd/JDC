@@ -4,8 +4,7 @@ from textual.widgets.option_list import Option
 from textual.app import ComposeResult
 from .base_screen import BaseScreen
 from .question_screen import QuestionScreen
-
-QUESTION = "Prefix Sum"
+from ...presentation.controllers.evaluation import ProblemController
 
 QUESTOES = {
     "op1": {"titulo": "Soma de Prefixos", "conteúdo": "Explicação da questão 01..."},
@@ -15,17 +14,24 @@ QUESTOES = {
 
 class ProblemsSections(BaseScreen):
 
+    def __init__(self, section_id: int, name: str):
+        super().__init__(name)
+        self.section_id = section_id
+
     def compose(self) -> ComposeResult:
         yield from super().compose()
-        
+        controller = ProblemController()
+
+        problems = controller.show_all_problems(self.section_id)
+
+        optionlist = [
+             Option(problem.title, id=problem.id)
+             for problem in problems
+        ]
+
         yield Container(
-            Static(QUESTION, classes="question"),
-            OptionList(
-                Option("Questão 01", id="op1"),
-                Option("Segunda Opção", id="op2"),
-                Option("Terceira Opção", id="op3"),
-                id="menu_selecao"
-            ),
+            Static(self.name, classes="question"),
+            OptionList(*optionlist),
             id="dialog",
         )
     
