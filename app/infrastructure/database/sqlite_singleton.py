@@ -6,7 +6,7 @@ class SQLiteDatabase:
     _instance = None
     _lock = threading.Lock()  
 
-    def __new__(cls, db_name="test_db"):
+    def __new__(cls, db_name="sample_data_set_db"):
         with cls._lock:
             if cls._instance is None:
                 cls._instance = super(SQLiteDatabase, cls).__new__(cls)
@@ -31,7 +31,7 @@ class SQLiteDatabase:
                 self._initialized = True
                 return
             
-            sql_file = Path(__file__).parent.parent.parent.parent / "test_db.sql"
+            sql_file = Path(__file__).parent.parent.parent.parent / "sample_data_set_db.sql"
             
             if sql_file.exists():
                 with open(sql_file, 'r', encoding='utf-8') as f:

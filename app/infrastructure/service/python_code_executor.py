@@ -8,10 +8,9 @@ COMPILER_ERROR_FLAG = "@CE@"
 class PythonCodeExecutor(CodeExecutor):
 
     def execute(self, code_path: str, inputs: list, time_limit: int) -> list:
-
         code_outputs = []
 
-        for input_value in inputs:
+        for idx, input_value in enumerate(inputs):
             try:
                 input_str = str(input_value)
                 

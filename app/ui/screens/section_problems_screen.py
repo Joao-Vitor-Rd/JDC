@@ -6,12 +6,6 @@ from .base_screen import BaseScreen
 from .question_screen import QuestionScreen
 from ...presentation.controllers.evaluation import ProblemController
 
-QUESTOES = {
-    "op1": {"titulo": "Soma de Prefixos", "conteúdo": "Explicação da questão 01..."},
-    "op2": {"titulo": "Two Pointers", "conteúdo": "Explicação da questão 02..."},
-    "op3": {"titulo": "Sliding Window", "conteúdo": "Explicação da questão 03..."},
-}
-
 class ProblemsSections(BaseScreen):
 
     def __init__(self, section_id: int, name: str):
@@ -36,7 +30,7 @@ class ProblemsSections(BaseScreen):
         )
     
     def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
-        questao_data = QUESTOES.get(event.option_id)
-        self.app.push_screen(QuestionScreen(questao_data))
+        problem_id = int(event.option_id)
+        self.app.push_screen(QuestionScreen(problem_id))
 
     

@@ -6,6 +6,6 @@ class ProblemSubmissionUseCase:
     @staticmethod
     def execute(problem: Problem):
         executor = PythonCodeExecutor()
-        code_path = Dir.concat_JDC_path(problem._title)
+        code_path = Dir.get_problem_path(problem.id)
         code_outputs = executor.execute(code_path=code_path, inputs=problem._inputs, time_limit=1)
         problem.evaluate_submission(code_outputs=code_outputs)

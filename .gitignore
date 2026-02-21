@@ -44,5 +44,4 @@ htmlcov/
 .env
 .env.local
 
-test_db
-test_db.sql
+sample_data_set_db

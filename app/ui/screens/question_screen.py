@@ -2,40 +2,27 @@ from textual.containers import Horizontal, Vertical
 from textual.widgets import Button, Static
 from textual.app import ComposeResult
 from .base_screen import BaseScreen
-from pathlib import Path
 from ...presentation.controllers.evaluation import ProblemController 
-from ...domain.evaluation.entities import Problem
-from ...util.dir import Dir
 import asyncio
-
-QUESTION = "Prefix Sum"
 
 class QuestionScreen(BaseScreen):
 
     CSS_PATH = "../css/question_screen.css"
 
-    def __init__(self, questao_data=None):
+    def __init__(self, problem_id: int):
         super().__init__()
-        self.questao_data = questao_data or {}
+        self.problem_id = problem_id
         self.controller = ProblemController()
         self.animation_frame = 0
         self.animation_handle = None
 
-        self.problem = Problem(
-            id=1,
-            title="q1.py",
-            description="Dado um número n, imprima de 1 até n, cada número em uma linha",
-            inputs=[5, 10, 1],
-            expected_outputs=["1\n2\n3\n4\n5", "1\n2\n3\n4\n5\n6\n7\n8\n9\n10", "1"],
-            submission_result=Problem.STATUS_UNSOLVED,
-            total_of_correct_outputs=0
-        )
+        self.problem = self.controller.get_problem(problem_id)
         
     def compose(self) -> ComposeResult:
         yield from super().compose()
         yield Vertical(
-            Static(self.questao_data.get("titulo", "Questão"), classes="titulo"),
-            Static(self.questao_data.get("conteúdo", "")),
+            Static(self.problem.title),
+            Static(self.problem.description),
             Static(self._get_status_display(), id="status_display", classes="status_box"),
             Horizontal(
                 Button("Voltar", id="btn_voltar", variant="primary"),
@@ -99,7 +86,7 @@ class QuestionScreen(BaseScreen):
         if event.button.id == "btn_voltar":
             self.app.pop_screen()
         if event.button.id == "code":
-            self.controller.edit_code(self.problem.title)
+            self.controller.edit_code(self.problem.id)
         if event.button.id == "submit":
             self.run_worker(self._execute_in_worker()) 
     
