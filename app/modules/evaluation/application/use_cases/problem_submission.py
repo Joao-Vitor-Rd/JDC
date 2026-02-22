@@ -1,6 +1,6 @@
 from ...infrastructure.service.python_code_executor import PythonCodeExecutor
-from ...modules.evaluation.domain.entities import Problem 
-from ...utils.dir import Dir
+from ...domain.entities import Problem 
+from .....shared.utils.dir import Dir
 
 class ProblemSubmissionUseCase:
     @staticmethod

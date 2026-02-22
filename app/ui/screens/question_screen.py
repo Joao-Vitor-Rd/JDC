@@ -2,7 +2,7 @@ from textual.containers import Horizontal, Vertical
 from textual.widgets import Button, Static
 from textual.app import ComposeResult
 from .base_screen import BaseScreen
-from ...presentation.controllers.evaluation import ProblemController 
+from ...modules.evaluation.presentation.controllers import ProblemController 
 import asyncio
 
 class QuestionScreen(BaseScreen):

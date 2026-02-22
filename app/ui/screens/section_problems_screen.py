@@ -4,7 +4,7 @@ from textual.widgets.option_list import Option
 from textual.app import ComposeResult
 from .base_screen import BaseScreen
 from .question_screen import QuestionScreen
-from ...presentation.controllers.evaluation import ProblemController
+from ...modules.evaluation.presentation.controllers import ProblemController
 
 class ProblemsSections(BaseScreen):
 
