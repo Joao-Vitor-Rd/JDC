@@ -9,3 +9,7 @@ class IProblemRepository(ABC):
     @abstractmethod
     def get_problem(self, problem_id: int) -> Problem:
         pass
+
+    @abstractmethod
+    def save_submition_result(self, problem: Problem):
+        pass

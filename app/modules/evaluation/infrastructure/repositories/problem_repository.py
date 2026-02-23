@@ -33,3 +33,24 @@ class ProblemRepository(IProblemRepository):
             test_cases_list = [dict(tc) for tc in test_cases]
             
             return ProblemMapper.to_problem(dict(row), test_cases_list)
+        
+    def save_submition_result(self, problem: Problem):
+        with self.db.get_connection() as conn:
+            cursor = conn.cursor()
+
+            sql = """
+                UPDATE problems
+                SET submission_result = ?, 
+                    total_of_correct_outputs = ? 
+                WHERE id = ?
+            """
+
+            params = (
+                problem.submission_result, 
+                problem.total_of_correct_outputs,
+                problem.id
+            )
+
+            cursor.execute(sql, params)
+            rows = cursor.fetchall()
+            
