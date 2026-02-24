@@ -24,7 +24,7 @@ class Problem:
 
         self._inputs = inputs
         self._expected_outputs = expected_outputs
-        self.time_limit = time_limit
+        self._time_limit = time_limit
 
         self._submission_result = submission_result
         self._total_of_correct_outputs = total_of_correct_outputs
@@ -95,10 +95,27 @@ class Problem:
 
     @property
     def time_limit(self) -> float:
-        return self.time_limit
+        return self._time_limit
 
-    @inputs.setter
+    @time_limit.setter
     def time_limit(self, time_limit: float) -> None:
+        self._time_limit = time_limit
+
+    @property
+    def submission_result(self) -> str:
+        return self._submission_result
+
+    @submission_result.setter
+    def submission_result(self, submission_result: str) -> None:
+        self._submission_result = submission_result
+
+    @property
+    def total_of_correct_outputs(self) -> int:
+        return self._total_of_correct_outputs
+
+    @total_of_correct_outputs.setter
+    def total_of_correct_outputs(self, total_of_correct_outputs: int) -> None:
+        self._total_of_correct_outputs = total_of_correct_outputs
         self._time_limit = time_limit
 
     @property
