@@ -4,7 +4,7 @@ from textual.widgets.option_list import Option
 from textual.app import ComposeResult
 from .base_screen import BaseScreen
 from .question_screen import QuestionScreen
-from ...modules.evaluation.presentation.controllers import ProblemController
+
 
 class ProblemsSections(BaseScreen):
 
@@ -14,7 +14,7 @@ class ProblemsSections(BaseScreen):
 
     def compose(self) -> ComposeResult:
         yield from super().compose()
-        controller = ProblemController()
+        controller = self.context.problem_controller
 
         problems = controller.show_all_problems(self.section_id)
 

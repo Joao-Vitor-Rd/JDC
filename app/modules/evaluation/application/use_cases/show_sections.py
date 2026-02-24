@@ -1,9 +1,14 @@
-from ...infrastructure.repositories import SectionRepository
+from ...domain.repositories import ISectionRepository
 
 class ShowSectionsUseCase:
-    @staticmethod
-    def execute() -> list:
-        repository = SectionRepository()
-        return repository.get_all_sections()
+    
+    def __init__(
+        self,
+        repository: ISectionRepository, 
+    ):
+        self.repository = repository
+
+    def execute(self) -> list:
+        return self.repository.get_all_sections()
 
         

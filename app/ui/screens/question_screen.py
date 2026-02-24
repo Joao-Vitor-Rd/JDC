@@ -2,7 +2,6 @@ from textual.containers import Horizontal, Vertical
 from textual.widgets import Button, Static
 from textual.app import ComposeResult
 from .base_screen import BaseScreen
-from ...modules.evaluation.presentation.controllers import ProblemController 
 import asyncio
 
 class QuestionScreen(BaseScreen):
@@ -12,9 +11,10 @@ class QuestionScreen(BaseScreen):
     def __init__(self, problem_id: int):
         super().__init__()
         self.problem_id = problem_id
-        self.controller = ProblemController()
         self.animation_frame = 0
         self.animation_handle = None
+        
+        self.controller = self.context.problem_controller
 
         self.problem = self.controller.get_problem(problem_id)
         

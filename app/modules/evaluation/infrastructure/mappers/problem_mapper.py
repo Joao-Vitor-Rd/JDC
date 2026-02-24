@@ -32,6 +32,7 @@ class ProblemMapper:
             description=row['description'],
             submission_result=row.get('submission_result'),
             total_of_correct_outputs=row.get('total_of_correct_outputs'),
+            time_limit=row['time_limit'],
             inputs=inputs,
             expected_outputs=expected_outputs
         )

@@ -9,6 +9,10 @@ class BaseScreen(Screen):
     
     is_root: bool = False 
     
+    @property
+    def context(self):
+        return self.app.context
+    
     BINDINGS = [
         Binding(key="q", action="quit", description="Quit the app"),
         Binding(

@@ -10,7 +10,18 @@ class ProblemRepository(IProblemRepository):
     def get_all_problems(self, section_id: int) -> list:
         with self.db.get_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT id, title FROM problems WHERE section_id = ?", (section_id,))
+
+            sql = """
+                SELECT id, title 
+                FROM problems 
+                WHERE section_id = ?
+            """
+
+            params = (
+                section_id,
+            )
+
+            cursor.execute(sql,params)
             rows = cursor.fetchall()
             
             return ProblemMapper.to_brief_dtos(rows)
@@ -18,8 +29,18 @@ class ProblemRepository(IProblemRepository):
     def get_problem(self, problem_id: int) -> Problem:
         with self.db.get_connection() as conn:
             cursor = conn.cursor()
+
+            sql = """
+                SELECT * 
+                FROM problems 
+                WHERE id = ?
+            """
+
+            params = (
+                problem_id,
+            )
             
-            cursor.execute("SELECT * FROM problems WHERE id = ?", (problem_id,))
+            cursor.execute(sql, params)
             row = cursor.fetchone()
             
             if not row:
@@ -48,7 +69,7 @@ class ProblemRepository(IProblemRepository):
             params = (
                 problem.submission_result, 
                 problem.total_of_correct_outputs,
-                problem.id
+                problem.id,
             )
 
             cursor.execute(sql, params)

@@ -13,8 +13,9 @@ class Problem:
         description: str,
         inputs: list,
         expected_outputs: list,
+        time_limit: float,
         submission_result: str,
-        total_of_correct_outputs: int,
+        total_of_correct_outputs: int
     ):
 
         self._id = id
@@ -23,6 +24,7 @@ class Problem:
 
         self._inputs = inputs
         self._expected_outputs = expected_outputs
+        self.time_limit = time_limit
 
         self._submission_result = submission_result
         self._total_of_correct_outputs = total_of_correct_outputs
@@ -90,6 +92,14 @@ class Problem:
     @expected_outputs.setter
     def expected_outputs(self, expected_outputs: list) -> None:
         self._expected_outputs = expected_outputs
+
+    @property
+    def time_limit(self) -> float:
+        return self.time_limit
+
+    @inputs.setter
+    def time_limit(self, time_limit: float) -> None:
+        self._time_limit = time_limit
 
     @property
     def submission_result(self) -> str:

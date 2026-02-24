@@ -1,7 +1,12 @@
 from ...domain.entities import Problem  
-from ...infrastructure.repositories import ProblemRepository
+from ...domain.repositories import IProblemRepository
 class ShowProblem:
-    @staticmethod
-    def execute(problem_id: int) -> Problem:
-        repository = ProblemRepository()
-        return repository.get_problem(problem_id)
+
+    def __init__(
+        self,
+        repository: IProblemRepository, 
+    ):
+        self.repository = repository
+
+    def execute(self, problem_id: int) -> Problem:
+        return self.repository.get_problem(problem_id)

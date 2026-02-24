@@ -7,12 +7,16 @@ COMPILER_ERROR_FLAG = "@CE@"
 
 class PythonCodeExecutor(CodeExecutor):
 
-    def execute(self, code_path: str, inputs: list, time_limit: int) -> list:
+    def execute(self, code_path: str, inputs: list, time_limit: float) -> list:
         code_outputs = []
 
         for idx, input_value in enumerate(inputs):
             try:
-                input_str = str(input_value)
+                input_str = (
+                    "\n".join(map(str, input_value))
+                    if isinstance(input_value, list)
+                    else str(input_value)
+                )
                 
                 result = subprocess.run(
                     [sys.executable, code_path],
