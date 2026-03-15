@@ -67,7 +67,7 @@ class ProblemRepository(IProblemRepository):
             """
 
             params = (
-                problem.submission_result, 
+                problem.submission_result.value, 
                 problem.total_of_correct_outputs,
                 problem.id,
             )

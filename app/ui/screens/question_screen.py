@@ -3,6 +3,7 @@ from textual.widgets import Static
 from textual.app import ComposeResult
 from textual.binding import Binding
 from .base_screen import BaseScreen
+from ...modules.evaluation.domain.enums import EvaluationResult
 import asyncio
 
 class QuestionScreen(BaseScreen):
@@ -34,9 +35,9 @@ class QuestionScreen(BaseScreen):
         )
     
     def _get_status_display(self) -> str:
-        status_text = self.problem.submission_result
-        correct = self.problem._total_of_correct_outputs
-        total = len(self.problem._expected_outputs)
+        status_text = self.problem.submission_result.value
+        correct = self.problem.total_of_correct_outputs
+        total = len(self.problem.expected_outputs)
         
         return f"Status: {status_text}\nAcertos: {correct}/{total}"
 

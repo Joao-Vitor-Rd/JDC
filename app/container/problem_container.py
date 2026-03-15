@@ -1,5 +1,5 @@
 from ..modules.evaluation.infrastructure.repositories.problem_repository import ProblemRepository
-from ..modules.evaluation.infrastructure.service.python_code_executor import PythonCodeExecutor
+from ..modules.evaluation.infrastructure.service.local_code_executor import LocalCodeExecutor
 
 from ..modules.evaluation.application.use_cases.problem_submission import ProblemSubmissionUseCase
 from ..modules.evaluation.application.use_cases.show_problems import ShowProblems
@@ -11,7 +11,7 @@ from ..modules.evaluation.presentation.controllers import ProblemController
 def build_problem_controller():
 
     repo = ProblemRepository()
-    executor = PythonCodeExecutor()
+    executor = LocalCodeExecutor()
 
     submission_uc = ProblemSubmissionUseCase(repo, executor)
     show_problems_uc = ShowProblems(repo)

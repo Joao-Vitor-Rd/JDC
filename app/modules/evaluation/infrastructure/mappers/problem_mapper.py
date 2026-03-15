@@ -1,5 +1,6 @@
 from ...application.dtos import ProblemBriefDTO
 from ...domain.entities import Problem
+from ...domain.enums import EvaluationResult
 
 class ProblemMapper:
 
@@ -30,7 +31,7 @@ class ProblemMapper:
             id=row['id'],
             title=row['title'],
             description=row['description'],
-            submission_result=row.get('submission_result'),
+            submission_result= EvaluationResult(row["submission_result"]),
             total_of_correct_outputs=row.get('total_of_correct_outputs'),
             time_limit=row['time_limit'],
             inputs=inputs,

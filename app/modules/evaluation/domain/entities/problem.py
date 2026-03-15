@@ -1,10 +1,7 @@
-class Problem:
+from ..enums import EvaluationResult
+from ..enums import EvaluationFlags
 
-    STATUS_UNSOLVED = "US"
-    STATUS_ACCEPTED = "AC"
-    STATUS_WRONG_ANSWER = "WA"
-    STATUS_TIME_LIMIT_EXCEED = "TL"
-    STATUS_COMPILER_ERROR = "CE"
+class Problem:
 
     def __init__(
         self,
@@ -14,7 +11,7 @@ class Problem:
         inputs: list,
         expected_outputs: list,
         time_limit: float,
-        submission_result: str,
+        submission_result: EvaluationResult,
         total_of_correct_outputs: int
     ):
 
@@ -32,24 +29,30 @@ class Problem:
             
     def evaluate_submission(self, code_outputs: list):
         correct_outputs = 0
-        submission_result = self.STATUS_WRONG_ANSWER
+        submission_result = EvaluationResult.WA
 
         for output, expected in zip(code_outputs, self._expected_outputs):
+            if output == EvaluationFlags.TL_FLAG: 
+                submission_result = EvaluationResult.TL
+                break
+
+            if output == EvaluationFlags.CE_FLAG:
+                submission_result = EvaluationResult.CE
+                break
+            
+            if output == EvaluationFlags.RE_FLAG:
+                submission_result = EvaluationResult.RE
+                break
+            
             if output == expected:
                 correct_outputs += 1
-            elif output == "@TL@": 
-                submission_result = self.STATUS_TIME_LIMIT_EXCEED
-                break
-            elif output == "@CE@":
-                submission_result = self.STATUS_COMPILER_ERROR
-                break
         
         if correct_outputs == len(self._expected_outputs):
-            submission_result = self.STATUS_ACCEPTED
+            submission_result = EvaluationResult.AC
         
         self._update_result(correct_outputs,submission_result)
         
-    def _update_result(self, correct_outputs: int, submission_result: str):
+    def _update_result(self, correct_outputs: int, submission_result: EvaluationResult):
         self.total_of_correct_outputs = correct_outputs
         self.submission_result = submission_result
 
@@ -102,11 +105,11 @@ class Problem:
         self._time_limit = time_limit
 
     @property
-    def submission_result(self) -> str:
+    def submission_result(self) -> EvaluationResult:
         return self._submission_result
 
     @submission_result.setter
-    def submission_result(self, submission_result: str) -> None:
+    def submission_result(self, submission_result: EvaluationResult) -> None:
         self._submission_result = submission_result
 
     @property
